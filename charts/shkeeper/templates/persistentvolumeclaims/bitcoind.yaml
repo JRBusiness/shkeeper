@@ -1,6 +1,6 @@
 {{ if .Values.btc.enabled }}
 apiVersion: v1
-kind: Workflow
+kind: PersistentVolumeClaim
 metadata:
   name: bitcoind-claim
   namespace: shkeeper
