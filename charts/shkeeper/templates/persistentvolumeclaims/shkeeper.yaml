@@ -4,12 +4,10 @@ metadata:
   name: shkeeper-db-claim
   namespace: shkeeper
 spec:
-  volumeClaimTemplates:
-    spec:
-      storageClassName: {{ .Values.storageClassName }}
-      accessModes: 
-        - "ReadWriteMany"
-      resources:
-        requests:
-          storage: 10Gi
+  storageClassName: {{ .Values.storageClassName }}
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
 
