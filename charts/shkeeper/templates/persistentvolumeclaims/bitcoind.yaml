@@ -1,14 +1,16 @@
 {{ if .Values.btc.enabled }}
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Workflow
 metadata:
   name: bitcoind-claim
   namespace: shkeeper
 spec:
-  storageClassName: {{ .Values.storageClassName }}
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 15Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: bitcoind-claim
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 15Gi
 {{ end }}

@@ -1,13 +1,15 @@
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Workflow
 metadata:
-  name: shkeeper-db-claim
+  name: shkeeper-claim
   namespace: shkeeper
 spec:
-  storageClassName: {{ .Values.storageClassName }}
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: shkeeper-claim
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
 
