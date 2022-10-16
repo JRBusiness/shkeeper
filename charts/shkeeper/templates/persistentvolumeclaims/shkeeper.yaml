@@ -8,6 +8,7 @@ spec:
     - metadata:
         name: shkeeper-claim
       spec:
+        storageClassName: {{ .Values.storageClassName }}
         accessModes: [ "ReadWriteMany" ]
         resources:
           requests:

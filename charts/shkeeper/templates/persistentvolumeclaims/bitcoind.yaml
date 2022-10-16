@@ -9,6 +9,7 @@ spec:
     - metadata:
         name: bitcoind-claim
       spec:
+        storageClassName: {{ .Values.storageClassName }}
         accessModes: [ "ReadWriteMany" ]
         resources:
           requests:
