@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shkeeper-deployment
+  namespace: shkeeper
+  labels:
+    app.kubernetes.io/instance: shkeeper-vsys
+    app.kubernetes.io/name: shkeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: shkeeper-vsys
+      app.kubernetes.io/name: shkeeper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: shkeeper-vsys
+        app.kubernetes.io/name: shkeeper
+    spec:
+      hostname: shkeeper
+      containers:
+      - name: shkeeper
+        image: vsyshost/shkeeper
+        ports:
+        - containerPort: 5000
+        env:
+          - name: TRON_API_SERVER_HOST
+            value: {{ .Values.tron.server.host }}
+          - name: TRON_API_SERVER_PORT
+            value: {{ .Values.tron.server.port | quote }}
+          - name: BTC_WALLET
+            value: {{ if .Values.btc.enabled }}enabled{{ else }}disabled{{ end }}
+          - name: LTC_WALLET
+            value: {{ if .Values.ltc.enabled }}enabled{{ else }}disabled{{ end }}
+          - name: DOGE_WALLET
+            value: {{ if .Values.doge.enabled }}enabled{{ else }}disabled{{ end }}
+          - name: USDT_WALLET
+            value: {{ if .Values.usdt.enabled }}enabled{{ else }}disabled{{ end }}
+          {{- if .Values.btc.enabled }}
+          - name: BTC_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: bitcoin-rpc
+                key: username
+                optional: false
+          - name: BTC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: bitcoin-rpc
+                key: password
+                optional: false
+          {{- end }}
+          {{- if .Values.ltc.enabled }}
+          - name: LTC_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: litecoin-rpc
+                key: username
+                optional: false
+          - name: LTC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: litecoin-rpc
+                key: password
+                optional: false
+          {{- end }}
+          {{- if .Values.doge.enabled }}
+          - name: DOGE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: dogecoin-rpc
+                key: username
+                optional: false
+          - name: DOGE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dogecoin-rpc
+                key: password
+                optional: false
+          {{- end }}
+          {{- if .Values.usdt.enabled }}
+          - name: USDT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: usdt-rpc
+                key: username
+                optional: false
+          - name: USDT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: usdt-rpc
+                key: password
+                optional: false
+          {{- end }}
+          - name: SHKEEPER_BTC_BACKEND_KEY
+            valueFrom:
+              secretKeyRef:
+                name: shkeeper-btc-key
+                key: password
+                optional: false
+        volumeMounts:
+        - name: shkeeper-db-storage
+          mountPath: /shkeeper.io/instance
+      volumes:
+      - name: shkeeper-db-storage
+        persistentVolumeClaim:
+          claimName: shkeeper-db-claim
