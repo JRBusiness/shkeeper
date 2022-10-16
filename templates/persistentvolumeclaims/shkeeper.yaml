@@ -1,14 +1,13 @@
-{{ if .Values.btc.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bitcoind-claim
+  name: shkeeper-db-claim
   namespace: shkeeper
 spec:
   storageClassName: {{ .Values.storageClassName }}
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
-      storage: 15Gi
-{{ end }}
+      storage: 10Gi
+
