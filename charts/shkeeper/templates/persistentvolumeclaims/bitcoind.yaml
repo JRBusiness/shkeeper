@@ -6,12 +6,11 @@ metadata:
   namespace: shkeeper
 spec:
   volumeClaimTemplates:
-    - metadata:
-        name: bitcoind-claim
-      spec:
-        storageClassName: {{ .Values.storageClassName }}
-        accessModes: [ "ReadWriteMany" ]
-        resources:
-          requests:
-            storage: 15Gi
+    spec:
+      storageClassName: {{ .Values.storageClassName }}
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: 15Gi
 {{ end }}
